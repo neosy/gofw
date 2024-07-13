@@ -85,6 +85,7 @@ func (c *RepositoryCollection) initLinks(nmongo *NMongo) {
 	c.repo = nmongo.Repo
 }
 
+// Добавить список коллекций (инициализация объекта)
 func (repo *Repository) addCollections(names interface{}) {
 	values := reflect.ValueOf(names)
 
