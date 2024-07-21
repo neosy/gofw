@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"log"
 	"reflect"
-
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 // Преобразование структуры в JSON
@@ -15,18 +13,6 @@ func StructToJSON(data interface{}) (dataJ []byte, err error) {
 
 	if err != nil {
 		log.Printf("%v: %v", ErrConvertToJSON.Error(), err)
-		return
-	}
-
-	return
-}
-
-// Преобразование структуры в JSON
-func StructToBSON(data interface{}) (dataBSON []byte, err error) {
-	dataBSON, err = bson.Marshal(data)
-
-	if err != nil {
-		log.Printf("%v: %v", ErrConvertToBSON.Error(), err)
 		return
 	}
 
