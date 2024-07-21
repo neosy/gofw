@@ -22,8 +22,8 @@ func CreateClient(addr string, port int) *Client {
 	return client
 }
 
-// Генерация URL адреса
-func (c *Client) CreateURL(cmd string) string {
+// Генерация URI
+func (c *Client) CreateURI(cmd string) string {
 	return fmt.Sprintf("%s:%v%s", c.Address, c.Port, cmd)
 }
 
