@@ -17,7 +17,7 @@ type Client struct {
 func CreateClient(addr string, port int) *Client {
 	client := &Client{}
 
-	client.init(addr, port)
+	client.Init(addr, port)
 
 	return client
 }
@@ -28,7 +28,7 @@ func (c *Client) CreateURL() string {
 }
 
 // Инициализация параметров
-func (c *Client) init(addr string, port int) {
+func (c *Client) Init(addr string, port int) {
 	c.Address = addr
 	c.Port = port
 }
@@ -36,4 +36,8 @@ func (c *Client) init(addr string, port int) {
 // Оснобождение ресурсов
 func (c *Client) Release() {
 	defer c.grpcConn.Close()
+}
+
+func (c *Client) GetConn() *grpc.ClientConn {
+	return c.grpcConn
 }
