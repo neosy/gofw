@@ -2,6 +2,7 @@ package ngrpc
 
 import (
 	"fmt"
+	"log"
 
 	"google.golang.org/grpc"
 )
@@ -31,6 +32,19 @@ func (c *Client) CreateURL() string {
 func (c *Client) Init(addr string, port int) {
 	c.Address = addr
 	c.Port = port
+}
+
+// Соединение с сервисом gRPC
+func (c *Client) Connect(opts ...grpc.DialOption) (err error) {
+	c.grpcConn, err = grpc.NewClient(c.CreateURL(), opts...)
+	if err != nil {
+		log.Println(
+			ErrClientConnect.Error(),
+			err,
+		)
+	}
+
+	return err
 }
 
 // Оснобождение ресурсов
