@@ -14,7 +14,7 @@ type NRedis struct {
 	password string
 	dbIdx    int
 
-	client *redis.Client
+	Client *redis.Client
 }
 
 func New(addr string, port int, password string, dbIdx int) *NRedis {
@@ -32,14 +32,14 @@ func New(addr string, port int, password string, dbIdx int) *NRedis {
 func (nredis *NRedis) Connect(ctx context.Context) error {
 	redisAddress := fmt.Sprintf("%v:%v", nredis.address, nredis.port)
 
-	nredis.client = redis.NewClient(&redis.Options{
+	nredis.Client = redis.NewClient(&redis.Options{
 		Addr:     redisAddress,    // Адрес Redis-сервера
 		Password: nredis.password, // Пароль (если есть)
 		DB:       nredis.dbIdx,    // Индекс базы данных
 	})
 
 	// Проверка состояния соединения
-	err := nredis.client.Ping(ctx).Err()
+	err := nredis.Client.Ping(ctx).Err()
 	if err != nil {
 		fmt.Println("Error connecting to Redis:", err)
 	}
