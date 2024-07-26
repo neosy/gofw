@@ -111,8 +111,8 @@ func (nKey *Key) Get(ctx context.Context, key string) (string, error) {
 }
 
 // Чтение структуры по ключу
-func (nKey *Key) GetStruct(ctx context.Context, key string, data interface{}) error {
-	value, err := nKey.client.Get(ctx, key).Result()
+func (nKey *Key) GetStruct(ctx context.Context, data interface{}) error {
+	value, err := nKey.client.Get(ctx, nKey.value).Result()
 
 	if nKey.logEnabled && err != nil {
 		log.Println(ErrRecordSearching.Error())
