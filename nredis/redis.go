@@ -48,7 +48,7 @@ func (nredis *NRedis) Connect(ctx context.Context) error {
 }
 
 // Создание объекта ключа
-func (nredis *NRedis) CreateKey(part ...string) *Key {
+func (nredis *NRedis) Key(part ...string) *Key {
 	key := CreateKey(part...)
 	key.ClientSet(nredis.Client)
 
