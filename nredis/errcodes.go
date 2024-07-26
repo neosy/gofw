@@ -9,5 +9,8 @@ var ErrRecordSearching = errors.New("error searching for a record")
 var ErrRecordUpdating = errors.New("error updating the record")
 var ErrRecordInserting = errors.New("error inserting the record")
 
-// DB Mongo Errors
+// Redis Errors
 var ErrCannotConnectToMongoDb = errors.New("cannot connect to Redis")
+
+// Data convert Errors
+var ErrCannotConvertToJSON = errors.New("error converting to json")

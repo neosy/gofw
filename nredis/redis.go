@@ -41,8 +41,16 @@ func (nredis *NRedis) Connect(ctx context.Context) error {
 	// Проверка состояния соединения
 	err := nredis.Client.Ping(ctx).Err()
 	if err != nil {
-		fmt.Println("Error connecting to Redis:", err)
+		fmt.Println(ErrCannotConnectToMongoDb.Error(), err)
 	}
 
 	return err
+}
+
+// Создание объекта ключа
+func (nredis *NRedis) CreateKey(part ...string) *Key {
+	key := CreateKey(part...)
+	key.ClientSet(nredis.Client)
+
+	return key
 }
