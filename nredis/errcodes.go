@@ -14,3 +14,4 @@ var ErrCannotConnectToMongoDb = errors.New("cannot connect to Redis")
 
 // Data convert Errors
 var ErrCannotConvertToJSON = errors.New("error converting to json")
+var ErrCannotConvertFromJSON = errors.New("error converting from json")

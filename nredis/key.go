@@ -78,9 +78,9 @@ func CreateKey(part ...string) *Key {
 }
 
 // Проверка существования ключа
-func (key *Key) Exists(ctx context.Context) (bool, error) {
+func (nKey *Key) Exists(ctx context.Context) (bool, error) {
 	var exists bool
-	exists_value, err := key.client.Exists(ctx, key.value).Result()
+	exists_value, err := nKey.client.Exists(ctx, nKey.value).Result()
 
 	if exists_value == 1 {
 		exists = true
@@ -90,29 +90,59 @@ func (key *Key) Exists(ctx context.Context) (bool, error) {
 }
 
 // Вставка как Ключ -> Значение
-func (key *Key) Set(ctx context.Context, value interface{}) error {
-	err := key.client.Set(ctx, key.value, value, key.expiration).Err()
-	if key.logEnabled && err != nil {
+func (nKey *Key) Set(ctx context.Context, value interface{}) error {
+	err := nKey.client.Set(ctx, nKey.value, value, nKey.expiration).Err()
+	if nKey.logEnabled && err != nil {
 		log.Println(ErrRecordInserting.Error())
 	}
 
 	return err
 }
 
+// Чтение значения по ключу
+func (nKey *Key) Get(ctx context.Context, key string) (string, error) {
+	value, err := nKey.client.Get(ctx, key).Result()
+
+	if nKey.logEnabled && err != nil {
+		log.Println(ErrRecordSearching.Error())
+	}
+
+	return value, err
+}
+
+// Чтение структуры по ключу
+func (nKey *Key) GetStruct(ctx context.Context, key string, data interface{}) error {
+	value, err := nKey.client.Get(ctx, key).Result()
+
+	if nKey.logEnabled && err != nil {
+		log.Println(ErrRecordSearching.Error())
+		return err
+	}
+
+	err = json.Unmarshal([]byte(value), data)
+
+	if nKey.logEnabled && err != nil {
+		log.Println(ErrCannotConvertFromJSON.Error())
+		return err
+	}
+
+	return err
+}
+
 // Вставка структуры как Ключ -> Значение
-func (key *Key) SetStruct(ctx context.Context, value interface{}) error {
+func (nKey *Key) SetStruct(ctx context.Context, value interface{}) error {
 	valueJSON, err := json.Marshal(value)
 	if err != nil {
-		if key.logEnabled {
+		if nKey.logEnabled {
 			log.Println(ErrCannotConvertToJSON.Error(), err)
 		}
 		return err
 	}
 
-	err = key.client.Set(ctx, key.value, valueJSON, key.expiration).Err()
+	err = nKey.client.Set(ctx, nKey.value, valueJSON, nKey.expiration).Err()
 	if err != nil {
 
-		if key.logEnabled {
+		if nKey.logEnabled {
 			log.Println(ErrRecordInserting.Error())
 		}
 		return err
