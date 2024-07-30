@@ -88,10 +88,26 @@ func (nKey *Key) Exists(ctx context.Context) (bool, error) {
 }
 
 // Вставка как Ключ -> Значение
-func (nKey *Key) Set(ctx context.Context, value interface{}) error {
-	err := nKey.client.Set(ctx, nKey.name, value, nKey.expiration).Err()
+func (nKey *Key) Set(ctx context.Context, data interface{}) error {
+	err := nKey.client.Set(ctx, nKey.name, data, nKey.expiration).Err()
 	if nKey.logEnabled && err != nil {
 		log.Println(ErrRecordInserting.Error())
+	}
+
+	return err
+}
+
+// Вставка как Ключ -> Значение
+func (nKey *Key) HSet(ctx context.Context, data interface{}) error {
+	err := nKey.client.HSet(ctx, nKey.name, data, nKey.expiration).Err()
+	if nKey.logEnabled && err != nil {
+		log.Println(ErrRecordInserting.Error(), err)
+		return err
+	}
+
+	_, err = nKey.client.Expire(ctx, nKey.name, nKey.expiration).Result()
+	if err != nil {
+		log.Println("oшибка при установке срока действия", err)
 	}
 
 	return err
@@ -106,6 +122,18 @@ func (nKey *Key) Get(ctx context.Context, key string) (string, error) {
 	}
 
 	return value, err
+}
+
+// Чтение значения по ключу
+func (nKey *Key) HGetAll(ctx context.Context, key string) (map[string]string, error) {
+	dataMap, err := nKey.client.HGetAll(ctx, key).Result()
+
+	if nKey.logEnabled && err != nil {
+		log.Println(ErrRecordSearching.Error())
+		return nil, err
+	}
+
+	return dataMap, err
 }
 
 // Чтение структуры по ключу. Хранение в виде JSON
@@ -123,6 +151,19 @@ func (nKey *Key) GetStructJSON(ctx context.Context, data interface{}) error {
 		log.Println(ErrCannotConvertFromJSON.Error())
 		return err
 	}
+
+	return err
+}
+
+// Чтение структуры по ключу
+func (nKey *Key) HGetStruct(ctx context.Context, data interface{}) error {
+	dataMap, err := nKey.HGetAll(ctx, nKey.name)
+
+	if err != nil {
+		return err
+	}
+
+	err = nbasic.MapStringToStruct(dataMap, data)
 
 	return err
 }
