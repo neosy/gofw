@@ -6,6 +6,10 @@ import (
 	"reflect"
 )
 
+func MapNameCorrect(name string) string {
+	return ToLowerFirst(name)
+}
+
 // Получения среза ключей из Map
 func MapToKeys(dataMap map[string]interface{}) []string {
 	keys := make([]string, 0, len(dataMap))
@@ -48,7 +52,7 @@ func MapStringToStruct(dataMap map[string]string, data interface{}) error {
 
 	for i := 0; i < dataType.NumField(); i++ {
 		fieldName := dataType.Field(i).Name
-		fieldValue, ok := dataMap[fieldName]
+		fieldValue, ok := dataMap[MapNameCorrect(fieldName)]
 		if ok {
 			field := dataValue.Field(i)
 			if field.CanSet() {

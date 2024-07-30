@@ -4,7 +4,18 @@ import (
 	"fmt"
 	"reflect"
 	"strconv"
+	"strings"
 )
+
+func ToLowerFirst(s string) (ret string) {
+	ret = s
+
+	if len(ret) > 0 {
+		ret = strings.ToLower(ret[:1]) + ret[1:]
+	}
+
+	return
+}
 
 // Преобразование строки в заданный тип данных
 func StringToType(value string, toType reflect.Type) (interface{}, error) {

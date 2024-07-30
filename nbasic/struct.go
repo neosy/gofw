@@ -72,7 +72,7 @@ func StructToMap(data interface{}) map[string]interface{} {
 	for i := 0; i < dataType.NumField(); i++ {
 		fieldName := dataType.Field(i).Name
 		fieldValue := dataValue.Field(i).Interface()
-		dataMap[fieldName] = fieldValue
+		dataMap[MapNameCorrect(fieldName)] = fieldValue
 	}
 
 	return dataMap
