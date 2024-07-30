@@ -18,8 +18,8 @@ func ToLowerFirst(s string) (ret string) {
 }
 
 // Преобразование строки в заданный тип данных
-func StringToType(value string, toType reflect.Type) (interface{}, error) {
-	switch toType.Kind() {
+func StringToType(value string, toType reflect.Kind) (interface{}, error) {
+	switch toType {
 	case reflect.String:
 		return value, nil
 	case reflect.Int:

@@ -56,7 +56,7 @@ func MapStringToStruct(dataMap map[string]string, data interface{}) error {
 		if ok {
 			field := dataValue.Field(i)
 			if field.CanSet() {
-				value, err := StringToType(fieldValue, dataType.Field(i).Type)
+				value, err := StringToType(fieldValue, dataType.Field(i).Type.Kind())
 				if err != nil {
 					return err
 				}
