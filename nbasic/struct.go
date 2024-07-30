@@ -19,18 +19,6 @@ func StructToJSON(data interface{}) (dataJ []byte, err error) {
 	return
 }
 
-// Преобразование структуры в Map
-func StructToMap(data interface{}) (dataMap map[string]interface{}, err error) {
-	dataJ, err := StructToJSON(data)
-
-	if err != nil {
-		return nil, err
-	}
-
-	err = json.Unmarshal(dataJ, &dataMap) // Convert to a map
-	return
-}
-
 // Преобразование структуры в Map, состоящую из строк
 func StructToMapString(data interface{}) (map[string]string, error) {
 	dataMap := make(map[string]string, 0)
@@ -66,4 +54,32 @@ func StructToMapString(data interface{}) (map[string]string, error) {
 	}
 
 	return dataMap, nil
+}
+
+// Преобразование структуры в Map
+func StructToMap(data interface{}) map[string]interface{} {
+	dataMap := make(map[string]interface{})
+
+	dataType := reflect.TypeOf(data)
+	dataValue := reflect.ValueOf(data)
+
+	for i := 0; i < dataType.NumField(); i++ {
+		fieldName := dataType.Field(i).Name
+		fieldValue := dataValue.Field(i).Interface()
+		dataMap[fieldName] = fieldValue
+	}
+
+	return dataMap
+}
+
+// Преобразование структуры в Map
+func StructToMapV2(data interface{}) (dataMap map[string]interface{}, err error) {
+	dataJ, err := StructToJSON(data)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(dataJ, &dataMap) // Convert to a map
+	return
 }

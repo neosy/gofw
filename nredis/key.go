@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/go-redis/redis/v8"
+	"github.com/neosy/gofw/nbasic"
 )
 
 const (
@@ -16,7 +17,7 @@ const (
 )
 
 type Key struct {
-	value      string
+	name       string
 	separator  string
 	expiration time.Duration
 	logEnabled bool
@@ -27,13 +28,13 @@ type Key struct {
 // Создание объетка Key
 func NewKey(separator string, part ...string) *Key {
 	key := &Key{
-		value:      "",
+		name:       "",
 		separator:  separator,
 		expiration: KeyExpirationDef,
 		logEnabled: KeyLogEnabledDef,
 	}
 
-	key.value = KeyGen(separator, part...)
+	key.name = KeyGen(separator, part...)
 
 	return key
 }
@@ -77,7 +78,7 @@ func CreateKey(part ...string) *Key {
 // Проверка существования ключа
 func (nKey *Key) Exists(ctx context.Context) (bool, error) {
 	var exists bool
-	exists_value, err := nKey.client.Exists(ctx, nKey.value).Result()
+	exists_value, err := nKey.client.Exists(ctx, nKey.name).Result()
 
 	if exists_value == 1 {
 		exists = true
@@ -88,7 +89,7 @@ func (nKey *Key) Exists(ctx context.Context) (bool, error) {
 
 // Вставка как Ключ -> Значение
 func (nKey *Key) Set(ctx context.Context, value interface{}) error {
-	err := nKey.client.Set(ctx, nKey.value, value, nKey.expiration).Err()
+	err := nKey.client.Set(ctx, nKey.name, value, nKey.expiration).Err()
 	if nKey.logEnabled && err != nil {
 		log.Println(ErrRecordInserting.Error())
 	}
@@ -107,9 +108,9 @@ func (nKey *Key) Get(ctx context.Context, key string) (string, error) {
 	return value, err
 }
 
-// Чтение структуры по ключу
-func (nKey *Key) GetStruct(ctx context.Context, data interface{}) error {
-	value, err := nKey.client.Get(ctx, nKey.value).Result()
+// Чтение структуры по ключу. Хранение в виде JSON
+func (nKey *Key) GetStructJSON(ctx context.Context, data interface{}) error {
+	value, err := nKey.client.Get(ctx, nKey.name).Result()
 
 	if nKey.logEnabled && err != nil {
 		log.Println(ErrRecordSearching.Error())
@@ -126,8 +127,8 @@ func (nKey *Key) GetStruct(ctx context.Context, data interface{}) error {
 	return err
 }
 
-// Вставка структуры как Ключ -> Значение
-func (nKey *Key) SetStruct(ctx context.Context, value interface{}) error {
+// Вставка структуры как Ключ -> Значение. Хранение в виде JSON
+func (nKey *Key) SetStructJSON(ctx context.Context, value interface{}) error {
 	valueJSON, err := json.Marshal(value)
 	if err != nil {
 		if nKey.logEnabled {
@@ -136,7 +137,23 @@ func (nKey *Key) SetStruct(ctx context.Context, value interface{}) error {
 		return err
 	}
 
-	err = nKey.client.Set(ctx, nKey.value, valueJSON, nKey.expiration).Err()
+	err = nKey.client.Set(ctx, nKey.name, valueJSON, nKey.expiration).Err()
+	if err != nil {
+
+		if nKey.logEnabled {
+			log.Println(ErrRecordInserting.Error())
+		}
+		return err
+	}
+
+	return err
+}
+
+// Вставка структуры как Ключ -> Значение
+func (nKey *Key) HSetStruct(ctx context.Context, data interface{}) error {
+	dataMap := nbasic.StructToMap(data)
+
+	err := nKey.client.HSet(ctx, nKey.name, dataMap).Err()
 	if err != nil {
 
 		if nKey.logEnabled {
