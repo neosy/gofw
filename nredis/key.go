@@ -51,6 +51,14 @@ func KeyGen(separator string, part ...string) (key string) {
 	return
 }
 
+func (key *Key) NameGet() string {
+	return key.name
+}
+
+func (key *Key) ClientGet() *redis.Client {
+	return key.client
+}
+
 func (key *Key) LogEnable() {
 	key.logEnabled = true
 }
