@@ -28,18 +28,36 @@ func StringToType(value string, toType reflect.Kind) (interface{}, error) {
 			return nil, err
 		}
 		return intValue, nil
+	case reflect.Uint:
+		uIntValue, err := strconv.ParseUint(value, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		return uIntValue, nil
 	case reflect.Int8:
 		int8Value, err := strconv.ParseInt(value, 10, 8)
 		if err != nil {
 			return nil, err
 		}
 		return int8Value, nil
+	case reflect.Uint8:
+		uInt8Value, err := strconv.ParseUint(value, 10, 8)
+		if err != nil {
+			return nil, err
+		}
+		return uInt8Value, nil
 	case reflect.Int16:
 		int16Value, err := strconv.ParseInt(value, 10, 16)
 		if err != nil {
 			return nil, err
 		}
 		return int16Value, nil
+	case reflect.Uint16:
+		uInt16Value, err := strconv.ParseUint(value, 10, 16)
+		if err != nil {
+			return nil, err
+		}
+		return uInt16Value, nil
 	case reflect.Int32:
 		int32Value, err := strconv.ParseInt(value, 10, 32)
 		if err != nil {
