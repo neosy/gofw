@@ -37,24 +37,14 @@ func MapStringToJSON(dataMap map[string]string) ([]byte, error) {
 
 // Преобразование Map в структуру
 func MapStringToStruct(dataMap map[string]string, data interface{}) error {
-	dataJSON, err := MapStringToJSON(dataMap)
-
-	if err != nil {
-		return err
-	}
-
-	err = json.Unmarshal(dataJSON, data)
-	if err != nil {
-		fmt.Println(ErrConvertJSONToStruct.Error())
-	}
-
-	return err
-}
-
-// Преобразование Map в структуру
-func MapStringToStructV2(dataMap map[string]string, data interface{}) error {
 	dataType := reflect.TypeOf(data)
+	if dataType.Kind() == reflect.Ptr {
+		dataType = dataType.Elem()
+	}
 	dataValue := reflect.ValueOf(data)
+	if dataValue.Kind() == reflect.Ptr {
+		dataValue = dataValue.Elem()
+	}
 
 	for i := 0; i < dataType.NumField(); i++ {
 		fieldName := dataType.Field(i).Name
@@ -72,4 +62,20 @@ func MapStringToStructV2(dataMap map[string]string, data interface{}) error {
 	}
 
 	return nil
+}
+
+// Преобразование Map в структуру
+func MapStringToStructV2(dataMap map[string]string, data interface{}) error {
+	dataJSON, err := MapStringToJSON(dataMap)
+
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(dataJSON, data)
+	if err != nil {
+		fmt.Println(ErrConvertJSONToStruct.Error())
+	}
+
+	return err
 }
