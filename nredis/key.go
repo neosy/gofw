@@ -114,8 +114,8 @@ func (nKey *Key) HSet(ctx context.Context, data interface{}) error {
 }
 
 // Чтение значения по ключу
-func (nKey *Key) Get(ctx context.Context, key string) (string, error) {
-	value, err := nKey.client.Get(ctx, key).Result()
+func (nKey *Key) Get(ctx context.Context) (string, error) {
+	value, err := nKey.client.Get(ctx, nKey.name).Result()
 
 	if nKey.logEnabled && err != nil {
 		log.Println(ErrRecordSearching.Error())
@@ -125,8 +125,8 @@ func (nKey *Key) Get(ctx context.Context, key string) (string, error) {
 }
 
 // Чтение значения по ключу
-func (nKey *Key) HGetAll(ctx context.Context, key string) (map[string]string, error) {
-	dataMap, err := nKey.client.HGetAll(ctx, key).Result()
+func (nKey *Key) HGetAll(ctx context.Context) (map[string]string, error) {
+	dataMap, err := nKey.client.HGetAll(ctx, nKey.name).Result()
 
 	if nKey.logEnabled && err != nil {
 		log.Println(ErrRecordSearching.Error())
@@ -157,7 +157,7 @@ func (nKey *Key) GetStructJSON(ctx context.Context, data interface{}) error {
 
 // Чтение структуры по ключу
 func (nKey *Key) HGetStruct(ctx context.Context, data interface{}) error {
-	dataMap, err := nKey.HGetAll(ctx, nKey.name)
+	dataMap, err := nKey.HGetAll(ctx)
 
 	if err != nil {
 		return err
