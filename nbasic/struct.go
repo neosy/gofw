@@ -61,7 +61,13 @@ func StructToMap(data interface{}) map[string]interface{} {
 	dataMap := make(map[string]interface{})
 
 	dataType := reflect.TypeOf(data)
+	if dataType.Kind() == reflect.Ptr {
+		dataType = dataType.Elem()
+	}
 	dataValue := reflect.ValueOf(data)
+	if dataValue.Kind() == reflect.Ptr {
+		dataValue = dataValue.Elem()
+	}
 
 	for i := 0; i < dataType.NumField(); i++ {
 		fieldName := dataType.Field(i).Name
