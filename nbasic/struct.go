@@ -57,7 +57,8 @@ func StructToMapString(data interface{}) (map[string]string, error) {
 }
 
 // Преобразование структуры в Map
-func StructToMap(data interface{}) map[string]interface{} {
+func StructToMapStringInterface(data interface{}) (map[string]interface{}, error) {
+	var err error
 	dataMap := make(map[string]interface{})
 
 	dataType := reflect.TypeOf(data)
@@ -78,17 +79,18 @@ func StructToMap(data interface{}) map[string]interface{} {
 			baseValue.Set(dataValue.Field(i).Convert(baseType))
 			fieldValue = baseValue.Interface()
 		} else {
-			fieldValue = dataValue.Field(i).Elem().Interface()
+			//fieldValue = dataValue.Field(i).Elem().Interface()
+			err = ErrConvertStructToMap
+			fmt.Println(err.Error())
 		}
 		dataMap[MapNameCorrect(fieldName)] = fieldValue
-
 	}
 
-	return dataMap
+	return dataMap, err
 }
 
-// Преобразование структуры в Map
-func StructToMapV2(data interface{}) (dataMap map[string]interface{}, err error) {
+// Преобразование структуры в Map через JSON
+func StructToMapStringInterfaceV2(data interface{}) (dataMap map[string]interface{}, err error) {
 	dataJ, err := StructToJSON(data)
 
 	if err != nil {

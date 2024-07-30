@@ -12,3 +12,6 @@ var ErrConvertJSONToStruct = errors.New("error converting JSON to Struct")
 
 // BSON Errors
 var ErrConvertToBSON = errors.New("error converting to BSON")
+
+// Map Errors
+var ErrConvertStructToMap = errors.New("error converting Struct to Map")
