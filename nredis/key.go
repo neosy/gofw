@@ -113,9 +113,11 @@ func (nKey *Key) HSet(ctx context.Context, values ...interface{}) error {
 		return err
 	}
 
-	_, err = nKey.client.Expire(ctx, nKey.name, nKey.expiration).Result()
-	if err != nil {
-		log.Println("oшибка при установке срока действия", err)
+	if nKey.expiration > 0 {
+		_, err = nKey.client.Expire(ctx, nKey.name, nKey.expiration).Result()
+		if err != nil {
+			log.Println("oшибка при установке срока действия", err)
+		}
 	}
 
 	return err
