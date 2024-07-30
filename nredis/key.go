@@ -39,18 +39,15 @@ func NewKey(separator string, part ...string) *Key {
 }
 
 // Создание текстового ключа из состовляющих
-func KeyGen(separator string, part ...string) string {
-	parts := make([]string, len(part))
-	key := ""
-
-	for i := range parts {
-		key += parts[i]
-		if i+1 != len(parts) {
+func KeyGen(separator string, part ...string) (key string) {
+	for i := range part {
+		key += part[i]
+		if i+1 != len(part) {
 			key += separator
 		}
 	}
 
-	return key
+	return
 }
 
 func (key *Key) LogEnable() {
