@@ -29,41 +29,59 @@ func StringToType(value string, toType reflect.Kind) (interface{}, error) {
 		}
 		return intValue, nil
 	case reflect.Uint:
-		uIntValue, err := strconv.ParseUint(value, 10, 64)
+		intValue, err := strconv.Atoi(value)
 		if err != nil {
 			return nil, err
 		}
-		return uIntValue, nil
+		return uint(intValue), nil
 	case reflect.Int8:
-		int8Value, err := strconv.ParseInt(value, 10, 8)
+		intValue, err := strconv.Atoi(value)
 		if err != nil {
 			return nil, err
 		}
-		return int8Value, nil
+		return int8(intValue), nil
 	case reflect.Uint8:
-		uInt8Value, err := strconv.ParseUint(value, 10, 8)
+		intValue, err := strconv.Atoi(value)
 		if err != nil {
 			return nil, err
 		}
-		return uInt8Value, nil
+		return uint8(intValue), nil
 	case reflect.Int16:
-		int16Value, err := strconv.ParseInt(value, 10, 16)
+		intValue, err := strconv.Atoi(value)
 		if err != nil {
 			return nil, err
 		}
-		return int16Value, nil
+		return int16(intValue), nil
 	case reflect.Uint16:
-		uInt16Value, err := strconv.ParseUint(value, 10, 16)
+		intValue, err := strconv.Atoi(value)
 		if err != nil {
 			return nil, err
 		}
-		return uInt16Value, nil
+		return uint16(intValue), nil
 	case reflect.Int32:
-		int32Value, err := strconv.ParseInt(value, 10, 32)
+		intValue, err := strconv.Atoi(value)
 		if err != nil {
 			return nil, err
 		}
-		return int32Value, nil
+		return int32(intValue), nil
+	case reflect.Uint32:
+		intValue, err := strconv.Atoi(value)
+		if err != nil {
+			return nil, err
+		}
+		return uint32(intValue), nil
+	case reflect.Int64:
+		intValue, err := strconv.Atoi(value)
+		if err != nil {
+			return nil, err
+		}
+		return int64(intValue), nil
+	case reflect.Uint64:
+		intValue, err := strconv.Atoi(value)
+		if err != nil {
+			return nil, err
+		}
+		return uint64(intValue), nil
 	case reflect.Float64:
 		floatValue, err := strconv.ParseFloat(value, 64)
 		if err != nil {
