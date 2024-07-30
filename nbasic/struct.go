@@ -75,7 +75,7 @@ func StructToMap(data interface{}) map[string]interface{} {
 		var fieldValue any
 		if baseType != nil {
 			baseValue := reflect.New(baseType).Elem()
-			baseValue.Set(dataValue.Field(i))
+			baseValue.Set(dataValue.Field(i).Elem())
 			fieldValue = baseValue.Interface()
 		} else {
 			fieldValue = dataValue.Field(i).Elem().Interface()
