@@ -98,8 +98,8 @@ func (nKey *Key) Set(ctx context.Context, data interface{}) error {
 }
 
 // Вставка как Ключ -> Значение
-func (nKey *Key) HSet(ctx context.Context, data interface{}) error {
-	err := nKey.client.HSet(ctx, nKey.name, data, nKey.expiration).Err()
+func (nKey *Key) HSet(ctx context.Context, values ...interface{}) error {
+	err := nKey.client.HSet(ctx, nKey.name, values...).Err()
 	if nKey.logEnabled && err != nil {
 		log.Println(ErrRecordInserting.Error(), err)
 		return err
