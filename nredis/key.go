@@ -192,12 +192,9 @@ func (nKey *Key) SetStructJSON(ctx context.Context, value interface{}) error {
 
 // Вставка структуры как Ключ -> Значение
 func (nKey *Key) HSetStruct(ctx context.Context, data interface{}) error {
-	dataMap, err := nbasic.StructToMapV2(data)
-	if err != nil {
-		return err
-	}
+	dataMap := nbasic.StructToMap(data)
 
-	err = nKey.client.HSet(ctx, nKey.name, dataMap).Err()
+	err := nKey.client.HSet(ctx, nKey.name, dataMap).Err()
 	if err != nil {
 
 		if nKey.logEnabled {
