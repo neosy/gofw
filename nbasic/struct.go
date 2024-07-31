@@ -71,7 +71,9 @@ func structToMapStringInterfaceOne(prefix string, dataValue reflect.Value, dataM
 
 	switch refKind {
 	case reflect.Ptr:
-		err = structToMapStringInterfaceOne(prefix, dataValue.Elem(), dataMap)
+		if !dataValue.IsNil() {
+			err = structToMapStringInterfaceOne(prefix, dataValue.Elem(), dataMap)
+		}
 	case reflect.Interface:
 		if !dataValue.IsNil() {
 			err = structToMapStringInterfaceOne(prefix, dataValue.Elem(), dataMap)
