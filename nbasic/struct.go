@@ -58,35 +58,49 @@ func StructToMapString(data interface{}) (map[string]string, error) {
 
 // Преобразование структуры в Map
 func StructToMapStringInterface(data interface{}) (map[string]interface{}, error) {
-	var err error
 	dataMap := make(map[string]interface{})
+	err := structToMapStringInterfaceOne("", reflect.ValueOf(data), dataMap)
 
-	dataType := reflect.TypeOf(data)
-	if dataType.Kind() == reflect.Ptr {
-		dataType = dataType.Elem()
-	}
-	dataValue := reflect.ValueOf(data)
-	if dataValue.Kind() == reflect.Ptr {
-		dataValue = dataValue.Elem()
-	}
+	return dataMap, err
+}
 
-	for i := 0; i < dataType.NumField(); i++ {
-		fieldName := dataType.Field(i).Name
-		baseType := ReflectKindToType(dataType.Field(i).Type.Kind())
+func structToMapStringInterfaceOne(prefix string, dataValue reflect.Value, dataMap map[string]interface{}) error {
+	var err error
+
+	switch dataValue.Kind() {
+	case reflect.Ptr:
+		err = structToMapStringInterfaceOne(prefix, dataValue.Elem(), dataMap)
+	case reflect.Struct:
+		dataType := dataValue.Type()
+		for i := 0; i < dataValue.NumField(); i++ {
+			fieldName := dataType.Field(i).Name
+			fieldValue := dataValue.Field(i)
+			if prefix != "" {
+				fieldName = prefix + "." + fieldName
+			}
+			err = structToMapStringInterfaceOne(fieldName, fieldValue, dataMap)
+			if err != nil {
+				break
+			}
+		}
+	default:
+		dataType := dataValue.Type()
+		baseType := ReflectKindToType(dataType.Kind())
 		var fieldValue any
 		if baseType != nil {
 			baseValue := reflect.New(baseType).Elem()
-			baseValue.Set(dataValue.Field(i).Convert(baseType))
+			baseValue.Set(dataValue.Convert(baseType))
 			fieldValue = baseValue.Interface()
 		} else {
 			//fieldValue = dataValue.Field(i).Elem().Interface()
 			err = ErrConvertStructToMap
 			fmt.Println(err.Error())
+			return err
 		}
-		dataMap[MapNameCorrect(fieldName)] = fieldValue
+		dataMap[MapNameCorrect(prefix)] = fieldValue
 	}
 
-	return dataMap, err
+	return err
 }
 
 // Преобразование структуры в Map через JSON
