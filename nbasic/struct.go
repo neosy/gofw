@@ -70,6 +70,12 @@ func structToMapStringInterfaceOne(prefix string, dataValue reflect.Value, dataM
 	switch dataValue.Kind() {
 	case reflect.Ptr:
 		err = structToMapStringInterfaceOne(prefix, dataValue.Elem(), dataMap)
+	case reflect.Interface:
+		if !dataValue.IsNil() {
+			err = structToMapStringInterfaceOne(prefix, dataValue.Elem(), dataMap)
+		} else {
+			err = ErrConvertStructToMap
+		}
 	case reflect.Struct:
 		dataType := dataValue.Type()
 		for i := 0; i < dataValue.NumField(); i++ {
