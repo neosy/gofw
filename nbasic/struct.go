@@ -67,7 +67,9 @@ func StructToMapStringInterface(data interface{}) (map[string]interface{}, error
 func structToMapStringInterfaceOne(prefix string, dataValue reflect.Value, dataMap map[string]interface{}) error {
 	var err error
 
-	switch dataValue.Kind() {
+	refKind := dataValue.Type().Kind()
+
+	switch refKind {
 	case reflect.Ptr:
 		err = structToMapStringInterfaceOne(prefix, dataValue.Elem(), dataMap)
 	case reflect.Interface:
