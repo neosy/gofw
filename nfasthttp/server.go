@@ -5,16 +5,11 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
-type StandardFailResponse struct {
-	Success    bool                    `json:"success"`
-	ErrorsData []StandardFailErrorData `json:"errorsData,omitempty"`
-}
-
-type StandardFailErrorData struct {
+type StandardResponse struct {
 	Message string `json:"message,omitempty"`
 }
 
-func (data *StandardFailResponse) json() []byte {
+func (data *StandardResponse) json() []byte {
 
 	json, _ := nbasic.StructToJSON(data)
 
@@ -41,11 +36,26 @@ func ResponseFail(ctx *fasthttp.RequestCtx, statusCode int, data []byte) {
 	}
 }
 
-func ResponseFailStandard(ctx *fasthttp.RequestCtx, statusCode int, msg string) {
-	data := StandardFailResponse{
-		Success:    false,
-		ErrorsData: []StandardFailErrorData{{Message: msg}},
+func ResponseFailDefault(ctx *fasthttp.RequestCtx, statusCode int, msg string) {
+	data := StandardResponse{
+		Message: msg,
 	}
 
 	ResponseFail(ctx, statusCode, data.json())
+}
+
+func ResponseSuccessDefault(ctx *fasthttp.RequestCtx, statusCode int, msg string) {
+	data := StandardResponse{
+		Message: msg,
+	}
+
+	ResponseSuccess(ctx, statusCode, data.json())
+}
+
+func ResponseSuccessOKDefault(ctx *fasthttp.RequestCtx, msg string) {
+	data := StandardResponse{
+		Message: msg,
+	}
+
+	ResponseSuccessOK(ctx, data.json())
 }

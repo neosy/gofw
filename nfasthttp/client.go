@@ -8,31 +8,31 @@ import (
 )
 
 type Client struct {
-	Address      string
+	URL          string
 	Port         int
 	fasthttpReq  *fasthttp.Request
 	fasthttpResp *fasthttp.Response
 }
 
-func CreateClient(addr string, port int) *Client {
+func CreateClient(url string, port int) *Client {
 	client := &Client{}
 
-	client.Init(addr, port)
+	client.Init(url, port)
 
 	return client
 }
 
 // Генерация URI
 func (c *Client) CreateURI(cmd string) string {
-	return fmt.Sprintf("%s:%v%s", c.Address, c.Port, cmd)
+	return fmt.Sprintf("%s:%v%s", c.URL, c.Port, cmd)
 }
 
 func (c *Client) Response() *fasthttp.Response {
 	return c.fasthttpResp
 }
 
-func (c *Client) Init(addr string, port int) {
-	c.Address = addr
+func (c *Client) Init(url string, port int) {
+	c.URL = url
 	c.Port = port
 }
 
